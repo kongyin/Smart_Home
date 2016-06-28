@@ -1,0 +1,117 @@
+//在yeelink服务器上取数据和上传数据的格式代码；
+void getData(int thisDevive,int thisSensor) 
+ {
+
+   int x=thisDevive;
+   int y=thisSensor;
+   if (client.connect(server, 80)) 
+   {
+       client.print("GET /v1.0/device/");
+
+       client.print(x);
+
+       client.print("/sensor/");
+       client.print(y);
+
+       client.print("/datapoints");
+
+       client.println(" HTTP/1.1");
+
+       client.println("Host: api.yeelink.net");
+ 
+       client.print("Accept: *");
+
+       client.print("/");
+
+       client.println("*");
+
+       client.print("U-ApiKey: ");
+
+       client.println(APIKEY);
+
+       client.println("Content-Length: 0");
+
+       client.println("Connection: close");
+
+       client.println(); 
+
+      }
+    else 
+    {
+     client.stop();
+     }
+   lastConnectionTime = millis();
+
+}
+
+
+void postData(int thisData,int SENSORID)
+{
+
+
+  if (client.connect(server, 80)) 
+  {
+
+    client.print("POST /v1.0/device/");
+ 
+    client.print(5393);
+
+    client.print("/sensor/");
+
+    client.print(SENSORID);
+
+    client.print("/datapoints");
+
+    client.println(" HTTP/1.1");
+
+    client.println("Host: api.yeelink.net");
+
+    client.print("Accept: *");
+ 
+    client.print("/");
+  
+    client.println("*");
+
+    client.print("U-ApiKey: ");
+
+    client.println(APIKEY);
+
+    client.print("Content-Length: ");
+
+    int thisLength = 10 + getLength(thisData);
+    client.println(thisLength);
+
+    client.println("Content-Type: application/x-www-form-urlencoded");
+
+    client.println("Connection: close");
+
+    client.println();
+
+    client.print("{\"value\":");
+
+    client.print(thisData);
+
+    client.println("}");
+
+  }
+  else 
+  {
+   client.stop();
+  }
+
+}
+
+
+}
+
+int getLength(int someValue)  //得到取得数据的长度；
+{
+    int digits = 1;
+    int dividend = someValue /10;
+    while (dividend > 0)
+    {
+      dividend = dividend /10;
+      digits++;
+    }
+   return digits;
+}
