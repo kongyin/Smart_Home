@@ -1,0 +1,56 @@
+void setup()
+ {
+  Serial3.begin(9600);
+  Serial.begin(9600);
+  }
+//数据的校验；
+  void loop()
+{ 
+       byte b[8]={0xAA,0xBB,0x02,0x05,0x01,0xAC,0x7B,0xFF};
+       byte c[9];
+       for(int i=0;i<8;i++)
+       {
+         Serial3.write(b[i]);
+         Serial.print(b[i],HEX);
+       }
+        Serial.println();
+        
+        delay(2000);
+
+  int i=0;
+  
+  unsigned long time=millis();
+
+
+  while(1)
+    {
+if(Serial3.available()>0)
+       {
+          c[i]=Serial3.read();    
+
+          if(i==0&&c[i]!=0xAA)
+            i=-1;
+          if(i==1&&c[i]!=0xBB)
+            i=-1;
+          if(i==2&&c[i]!=0x02)
+            i=-1;
+
+	  if(-1 == i)
+	  {
+	    Serial.println("Wrong");
+	    break;
+	  }
+          Serial.print(c[i],HEX);   
+          Serial.print(" ");
+          i++;
+          if(i==9)
+            break;
+          if((millis()-time)>50000)
+          {
+            Serial.println("time is over");     
+          }
+        }     
+    } 
+       delay(1000); 
+      
+}
